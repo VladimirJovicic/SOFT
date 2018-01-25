@@ -26,7 +26,7 @@ def find_squares(img):
                         squares.append(cnt)
     return squares
 
-
+print('POYDRAV')
 
 img = cv2.imread('slike\\proba.png')
 img = cv2.GaussianBlur(img,(5,5),0)
