@@ -1,4 +1,3 @@
-import homography
 import cv2
 import numpy as np
 
@@ -29,7 +28,7 @@ def find_squares(img):
 
 
 
-img = cv2.imread('C:\Users\Vladimir\Pictures\proba.png')
+img = cv2.imread('slike\\proba.png')
 img = cv2.GaussianBlur(img,(5,5),0)
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 mask = np.zeros((gray.shape),np.uint8)
@@ -42,12 +41,6 @@ res2 = cv2.cvtColor(res,cv2.COLOR_GRAY2BGR)
 
 thresh = cv2.adaptiveThreshold(res,255,0,1,201,2)
 _, contours, hierarch = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-#alternativa je bila
-#thresh = cv22.adaptiveThreshold(res,255,0,1,19,2)
-#contour,hier = cv22.findContours(thresh,cv22.RETR_TREE,cv22.CHAIN_APPROX_SIMPLE)
-#ali je bacao neku gresku koju smo pronasli na linku :
-#https://github.com/jasonlfunk/ocr-text-extraction/issues/5
-
 max_area = 0
 best_cnt = None
 for cnt in contours:
@@ -63,8 +56,8 @@ cv2.drawContours(mask,[best_cnt],0,0,0)
 res = cv2.bitwise_and(res,mask)
 
 squares = find_squares(img)
-cv2.drawContours( img, squares, -1, (0, 255, 255), 3 )
+cv2.drawContours(img, squares, -1, (0, 255, 255), 3 )
 
-cv2.imshow('image',img)
+cv2.imshow('image',res)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
