@@ -3,13 +3,10 @@ import numpy as np
 import fun_mat as mat_fun
 import fun_slike as slike_fun
 
-
-
-putanja = 'slike\proba.png'
+putanja = 'slike\\ss.png'
 img = cv2.imread(putanja)
 res,res2 = slike_fun.ucitajSliku(putanja)
-
-#slike_fun.prikaziSliku(res)
+slike_fun.prikaziSliku(res)
 
 closex = slike_fun.detekcijaHorizontalnihLinija(res)
 slike_fun.prikaziSliku(closex)
@@ -19,7 +16,7 @@ slike_fun.prikaziSliku(closey)
 
 #pravi presek
 res = cv2.bitwise_and(closex,closey)
-slike_fun.prikaziSliku(res)
+#slike_fun.prikaziSliku(res)
 
 
 centroids = slike_fun.dodajKoordinatePreseka(res,img)
