@@ -37,6 +37,7 @@ def izolujMatricu(res, mask,res2):
     # ostatav ove funkcije se ne koristi
     # mozda ce biti obrisan ali dobro detektuje sve coskove
     # ako ne budemo koristili brisemo
+    '''
     M = cv2.moments(biggest)
     cx = int(M['m10'] / M['m00'])
     cy = int(M['m01'] / M['m00'])
@@ -61,7 +62,7 @@ def izolujMatricu(res, mask,res2):
     corners.append(topright)
     corners.append(botright)
     corners.append(botleft)
-
+ '''
     # provera za isrctavanje coskova
     #tmpRes = res
     #for i in range(0,4):

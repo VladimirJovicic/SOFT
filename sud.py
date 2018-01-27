@@ -4,16 +4,16 @@ import fun_mat as mat_fun
 import fun_slike as slike_fun
 import sudoku
 
-putanja = 'slike\\ss.png'
+putanja = 'slike\\test_12.jpg'
 img = cv2.imread(putanja)
 res,res2 = slike_fun.ucitajSliku(putanja)
-#slike_fun.prikaziSliku(res)
+slike_fun.prikaziSliku(res)
 
 closex = slike_fun.detekcijaHorizontalnihLinija(res)
-#slike_fun.prikaziSliku(closex)
+slike_fun.prikaziSliku(closex)
 
 closey = slike_fun.detekcijaVertikalnihLinija(res)
-#slike_fun.prikaziSliku(closey)
+slike_fun.prikaziSliku(closey)
 
 #pravi presek
 res = cv2.bitwise_and(closex,closey)
@@ -21,12 +21,12 @@ res = cv2.bitwise_and(closex,closey)
 
 
 centroids = slike_fun.dodajKoordinatePreseka(res,img)
-#slike_fun.prikaziSliku(img)
+slike_fun.prikaziSliku(img)
 
 bm,b = slike_fun.setuj_i_sortiraj(centroids)
 
 output,niz = slike_fun.kreirajMatricu(b,bm,res2)
-#slike_fun.prikaziSliku(output)
+slike_fun.prikaziSliku(output)
 
 
 '''
