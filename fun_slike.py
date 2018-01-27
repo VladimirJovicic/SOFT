@@ -132,6 +132,7 @@ def setuj_i_sortiraj(centroids):
     return bm,b
 
 def kreirajMatricu(b,bm,res2):
+    niz = []
     output = np.zeros((450, 450, 3), np.uint8)
     for i, j in enumerate(b):
         ri = i / 10
@@ -144,8 +145,9 @@ def kreirajMatricu(b,bm,res2):
             warp = cv2.warpPerspective(res2, retval, (450, 450))
             output[ri * 50:(ri + 1) * 50 - 1, ci * 50:(ci + 1) * 50 - 1] = warp[ri * 50:(ri + 1) * 50 - 1,
                                                                            ci * 50:(ci + 1) * 50 - 1].copy()
-            #prikaziSliku(output)
-    return output
+            niz.append(warp[ri * 50:(ri + 1) * 50 - 1,ci * 50:(ci + 1) * 50 - 1].copy())
+            #prikaziSliku(warp[ri * 50:(ri + 1) * 50 - 1,ci * 50:(ci + 1) * 50 - 1].copy())
+    return output,niz
 
 
 def prikaziSliku(img):
