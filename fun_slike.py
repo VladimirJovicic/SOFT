@@ -128,7 +128,7 @@ def setuj_i_sortiraj(centroids):
     c = centroids.reshape((100, 2))
     c2 = c[np.argsort(c[:, 1])]
 
-    b = np.vstack([c2[i * 10:(i + 1) * 10][np.argsort(c2[i * 10:(i + 1) * 10, 0])] for i in xrange(10)])
+    b = np.vstack([c2[i * 10:(i + 1) * 10][np.argsort(c2[i * 10:(i + 1) * 10, 0])] for i in range(10)])
     bm = b.reshape((10, 10, 2))
     return bm,b
 
@@ -136,18 +136,22 @@ def kreirajMatricu(b,bm,res2):
     niz = []
     output = np.zeros((450, 450, 3), np.uint8)
     for i, j in enumerate(b):
-        ri = i / 10
+       # print("j = ",j)
+        ri = i // 10
         ci = i % 10
+        #print('int(ri) = ',int(ri))
+        #print(ci)
         if ci != 9 and ri != 9:
-            src = bm[ri:ri + 2, ci:ci + 2, :].reshape((4, 2))
+            src = bm[ri:ri + 2, ci:ci + 2].reshape((4, 2))
+            #print(i, '\n', src)
             dst = np.array([[ci * 50, ri * 50], [(ci + 1) * 50 - 1, ri * 50], [ci * 50, (ri + 1) * 50 - 1],
                             [(ci + 1) * 50 - 1, (ri + 1) * 50 - 1]], np.float32)
             retval = cv2.getPerspectiveTransform(src, dst)
             warp = cv2.warpPerspective(res2, retval, (450, 450))
-            output[ri * 50:(ri + 1) * 50 - 1, ci * 50:(ci + 1) * 50 - 1] = warp[ri * 50:(ri + 1) * 50 - 1,
-                                                                           ci * 50:(ci + 1) * 50 - 1].copy()
-            niz.append(warp[ri * 50:(ri + 1) * 50 - 1,ci * 50:(ci + 1) * 50 - 1].copy())
-            #prikaziSliku(warp[ri * 50:(ri + 1) * 50 - 1,ci * 50:(ci + 1) * 50 - 1].copy())
+            output[int(ri) * 50:(int(ri) + 1) * 50 - 1, int(ci) * 50:(int(ci) + 1) * 50 - 1] = warp[int(ri) * 50:(int(ri) + 1) * 50 - 1,
+                                                                           int(ci) * 50:(int(ci) + 1) * 50 - 1].copy()
+            niz.append(warp[int(ri) * 50:(int(ri) + 1) * 50 - 1,int(ci) * 50:(int(ci) + 1) * 50 - 1].copy())
+            #prikaziSliku(output)
     return output,niz
 
 
