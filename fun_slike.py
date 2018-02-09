@@ -1,6 +1,13 @@
 import cv2
 import numpy as np
 
+
+def prikaziSliku(img):
+    cv2.imshow('image', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
 def ucitajSliku(putanja):
     img = cv2.imread(putanja)
     img = cv2.GaussianBlur(img, (5, 5), 0)
@@ -155,8 +162,15 @@ def kreirajMatricu(b,bm,res2):
     return output,niz
 
 
-def prikaziSliku(img):
-    cv2.imshow('image', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+def razbiSlikuNaKvadrate(img):
+    # Creates a list containing 9 lists, each of 9 items, all set to 0
+    w, h = 9, 9;
+    Matrix = [[0 for x in range(w)] for y in range(h)]
 
+    for i in range(0, 9):
+        for j in range(0, 9):
+            img_crop = img[i*50:(i+1)*50, j*50:(j+1)*50]
+            #img_crop = resize_region(img_crop)
+            Matrix[i][j] = img_crop
+
+    return Matrix

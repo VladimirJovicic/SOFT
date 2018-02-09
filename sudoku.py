@@ -22,8 +22,8 @@ def validno(i,j,val,puzzle):
             return False
 
     #proverava da li je broj u istom kvadratu 3x3
-    kvadratRed    = (i / 3) * 3
-    kvadratKolona = (j / 3) * 3
+    kvadratRed    = (i // 3) * 3
+    kvadratKolona = (j // 3) * 3
     for k in range(0,3):
         for m in range(0,3):
             if val == puzzle[kvadratRed + k][kvadratKolona + m]:

@@ -1,16 +1,21 @@
 import cv2
-import fun_slike as slike_fun
+import fun_slike
 import sudoku
+from keras.models import model_from_json
+import numpy as np
+import fun_NM
+import os
+
 
 putanja = 'slike\\test_1.jpg'
 img = cv2.imread(putanja)
-res,res2 = slike_fun.ucitajSliku(putanja)
-#slike_fun.prikaziSliku(res)
+res,res2 = fun_slike.ucitajSliku(putanja)
+#fun_slike.prikaziSliku(res)
 
-closex = slike_fun.detekcijaHorizontalnihLinija(res)
+closex = fun_slike.detekcijaHorizontalnihLinija(res)
 #slike_fun.prikaziSliku(closex)
 
-closey = slike_fun.detekcijaVertikalnihLinija(res)
+closey = fun_slike.detekcijaVertikalnihLinija(res)
 #slike_fun.prikaziSliku(closey)
 
 #pravi presek
@@ -18,13 +23,51 @@ res = cv2.bitwise_and(closex,closey)
 #slike_fun.prikaziSliku(res)
 
 
-centroids = slike_fun.dodajKoordinatePreseka(res,img)
-slike_fun.prikaziSliku(img)
+centroids = fun_slike.dodajKoordinatePreseka(res,img)
+#slike_fun.prikaziSliku(img)
 
-bm,b = slike_fun.setuj_i_sortiraj(centroids)
+bm,b = fun_slike.setuj_i_sortiraj(centroids)
 
-output,niz = slike_fun.kreirajMatricu(b,bm,res2)
-slike_fun.prikaziSliku(output)
+output,niz = fun_slike.kreirajMatricu(b,bm,res2)
+fun_slike.prikaziSliku(output)
+
+########################################################
+deloviSlike = fun_slike.razbiSlikuNaKvadrate(output)
+#for i in range(0, 9):
+    #for j in range(0, 9):
+       # fun_slike.prikaziSliku(deloviSlike[i][j])
+
+json_file = open('model.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+ann = model_from_json(loaded_model_json)
+ann.load_weights("model.h5")
+
+alphabet = [0,1,2,3,4,5,6,7,8,9]
+sudokuMatrica = []
+for i in range(0, 9):
+    inputs = fun_NM.prepare_for_ann(deloviSlike[i])     #pripremanje za neuronsku mrezu matrice red po red
+    results = ann.predict(np.array(inputs, np.float32))
+
+    redMatrice = []
+
+    #print(result)
+    for result in results:
+        winner = max(enumerate(result), key = lambda x: x[1])[0]
+        redMatrice.append(alphabet[winner])
+
+    sudokuMatrica.append(redMatrice)
+
+for i in range(0, 9):
+    print()
+    for j in range(0, 9):
+        print(sudokuMatrica[i][j], end='')
+
+
+if sudoku.solve(0,0,sudokuMatrica) == True:
+   sudoku.print_sudoku(sudokuMatrica)
+else:
+    print('Nesto nije u redu sa maticom')
 
 '''
 puzzle = [  (5,3,0,0,7,0,0,0,0),
