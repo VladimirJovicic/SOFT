@@ -6,7 +6,7 @@ import numpy as np
 import fun_NM
 
 
-putanja = 'slike\\test_1.jpg'
+putanja = 'slike\\test_7.jpg'
 img = cv2.imread(putanja)
 res,res2 = fun_slike.ucitajSliku(putanja)
 #fun_slike.prikaziSliku(res)
