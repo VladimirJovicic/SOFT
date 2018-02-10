@@ -13,38 +13,60 @@ def prikaziSliku(img):
 
 
 def ucitajSliku(putanja):
-    img = cv2.imread(putanja)
+    img = cv2.imread(putanja)   #ucita sliku sa prosledjene putanje
+    # bluruje sliku - bude onako smooth mutna
     img = cv2.GaussianBlur(img, (5, 5), 0)
+    # menja RGB u BGR i postaje crno-bela slika
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # kreira masku - niz koji je dimenzija crno bele slike
     mask = np.zeros((gray.shape), np.uint8)
+    # pretstavlja elipse na osnovu kojih se detektuju oblasti
     kernel1 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
+    # detektuje one "izrazenije" oblasti koje su se odredile na osnovu kernela
+    # i uklanja sumove
     close = cv2.morphologyEx(gray, cv2.MORPH_CLOSE, kernel1)
+    # slika postaje crno bela bez nijansi sive
     div = np.float32(gray) / (close)
     res = np.uint8(cv2.normalize(div, div, 0, 255, cv2.NORM_MINMAX))
+    # treba jos obraditi sliku pa vracamo i res i res2, zato vracamo res2 a res jos obradjujemo
     res2 = cv2.cvtColor(res, cv2.COLOR_GRAY2BGR)
-    resNovi = izolujMatricu(res, mask,res2)
+    resNovi = izolujMatricu(res, mask)
 
     return resNovi,res2
 
-def izolujMatricu(res, mask,res2):
+def izolujMatricu(res, mask):
+    # konvertuje sve u crno belo za lakse izolovanje
+    # brojevi 0,1,201 i 2 su eksperimentalno dobijeni
     thresh = cv2.adaptiveThreshold(res, 255, 0, 1, 201, 2)
-    _, contours, hierarch = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # pronalazi sve konture u obliku cetvorougla
+    # smesta u pomenljivu contours, a ove prazne promenljive
+    # su tu zato sto funkcija fintContours mora da ima 3 izlaza
+    # i smesta u srednju promenljivu
+    _, contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # pretpostavka : najveci kvadrat na slici pretstavlja sudoku matricu
     max_area = 0
     best_cnt = None
     for cnt in contours:
+        # pretrazuje i gleda svaku konturu posebno
         area = cv2.contourArea(cnt)
+        # pretpostavka da ce matrica da zauzima veci deo slike
         if area > 1000:
-            peri = cv2.arcLength(cnt, True)
-            approx = cv2.approxPolyDP(cnt, 0.02 * peri, True)
-            if area > max_area and len(approx)==4:
+            if area > max_area:
                 max_area = area
                 best_cnt = cnt
-                biggest = approx
 
+    # crta konture : na masku(crnu pozadinu) stavlja najveci kvadrat koji je preuzet
+    # prvi parametar je izvorna slika, drugi parametar pretstavlja konture koje se iscrtavaju
+    # treci je index konture (posto imamo samo jednu, prosledjuje se 0 (da zelimo iscrtati sve konture
+    #   stavi se -1)
+    # ovo ostalo treba da su za boje i to, ne radi kad se unese nesto drugo od 255 i -1
     cv2.drawContours(mask, [best_cnt], 0, 255, -1)
-    cv2.drawContours(mask, [best_cnt], 0, 0, 0)
-    res = cv2.bitwise_and(res, mask)
 
+    # u masci se nalazi beli cetvorougao koji je dimenzija sudoku matrice
+    # potrebno je samo jos sa AND operacijom da se puste res i mask i kao rezultat
+    #   se izbacuje izdvojena sudoku matrica sa slike na crnoj pozadini
+    res = cv2.bitwise_and(res, mask)
     return  res
 
 
@@ -131,6 +153,20 @@ def kreirajMatricu(b,bm,res2):
             #prikaziSliku(output)
     return output,niz
 
+
+def razbiSlikuNaKvadrate(img):
+    # Creates a list containing 9 lists, each of 9 items, all set to 0
+    w, h = 9, 9;
+    Matrix = [[0 for x in range(w)] for y in range(h)]
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    for i in range(0, 9):
+        for j in range(0, 9):
+            img_crop = img[i*50:(i+1)*50, j*50:(j+1)*50]
+            #img_crop = resize_region(img_crop)
+            Matrix[i][j] = img_crop
+
+    return Matrix
+
 def iscrtajBrojeveNaSliku(ulazna_matrica, resena_matrica, slika):
     image = Image.fromarray(slika, 'RGB')
     draw = ImageDraw.Draw(image)
@@ -146,18 +182,3 @@ def iscrtajBrojeveNaSliku(ulazna_matrica, resena_matrica, slika):
     # kovertovanje RGB i BGR
     konacna_slika = konacna_slika[:, :, ::-1].copy()
     prikaziSliku(konacna_slika)
-
-
-
-def razbiSlikuNaKvadrate(img):
-    # Creates a list containing 9 lists, each of 9 items, all set to 0
-    w, h = 9, 9;
-    Matrix = [[0 for x in range(w)] for y in range(h)]
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    for i in range(0, 9):
-        for j in range(0, 9):
-            img_crop = img[i*50:(i+1)*50, j*50:(j+1)*50]
-            #img_crop = resize_region(img_crop)
-            Matrix[i][j] = img_crop
-
-    return Matrix
