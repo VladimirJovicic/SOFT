@@ -6,7 +6,7 @@ import numpy as np
 import fun_NM
 
 
-putanja = 'slike\\test_3.jpg'
+putanja = 'slike\\sudoku-logo.png'
 img = cv2.imread(putanja)
 res,res2 = fun_slike.ucitajSliku(putanja)
 #fun_slike.prikaziSliku(res)
@@ -58,11 +58,10 @@ for i in range(0, 9):
     sudokuMatrica.append(redMatrice)
 
 sudoku.print_sudoku(sudokuMatrica)
+print('*****************************')
 ulaznaMatrica = sudokuMatrica
 if sudoku.solve(0,0,sudokuMatrica) == True:
    sudoku.print_sudoku(sudokuMatrica)
-   fun_slike.iscrtajBrojeveNaSliku(ulaznaMatrica,sudokuMatrica,output)
-
 else:
     print('Nesto nije u redu sa maticom')
 
