@@ -4,7 +4,6 @@ import sudoku
 from keras.models import model_from_json
 import numpy as np
 import fun_NM
-import os
 
 
 putanja = 'slike\\test_1.jpg'
@@ -34,8 +33,8 @@ fun_slike.prikaziSliku(output)
 ########################################################
 deloviSlike = fun_slike.razbiSlikuNaKvadrate(output)
 #for i in range(0, 9):
-    #for j in range(0, 9):
-       # fun_slike.prikaziSliku(deloviSlike[i][j])
+   # for j in range(0, 9):
+        #fun_slike.prikaziSliku(deloviSlike[i][j])
 
 json_file = open('model.json', 'r')
 loaded_model_json = json_file.read()
@@ -59,10 +58,9 @@ for i in range(0, 9):
     sudokuMatrica.append(redMatrice)
 
 for i in range(0, 9):
-    print()
     for j in range(0, 9):
-        print(sudokuMatrica[i][j], end='')
-
+        print(sudokuMatrica[i][j], end="")
+    print()
 
 if sudoku.solve(0,0,sudokuMatrica) == True:
    sudoku.print_sudoku(sudokuMatrica)

@@ -166,7 +166,7 @@ def razbiSlikuNaKvadrate(img):
     # Creates a list containing 9 lists, each of 9 items, all set to 0
     w, h = 9, 9;
     Matrix = [[0 for x in range(w)] for y in range(h)]
-
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     for i in range(0, 9):
         for j in range(0, 9):
             img_crop = img[i*50:(i+1)*50, j*50:(j+1)*50]

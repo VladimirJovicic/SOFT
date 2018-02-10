@@ -30,7 +30,7 @@ def prepare_for_ann(regions):
 
 def create_ann():
     ann = Sequential()
-    ann.add(Dense(128, input_dim=7500, activation='sigmoid'))
+    ann.add(Dense(412, input_dim=2500, activation='sigmoid'))
     ann.add(Dense(10, activation='sigmoid'))
     return ann
 

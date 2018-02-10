@@ -10,6 +10,7 @@ for filename in os.listdir('data_set_brojeva\\trening'):
     #print(filename)
     brojZaTreniranje = filename[0]
     img = cv2.imread('data_set_brojeva\\trening\\' + filename)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     output = np.zeros(10)
     output[int(brojZaTreniranje)] = 1
@@ -18,7 +19,6 @@ for filename in os.listdir('data_set_brojeva\\trening'):
     slikeBrojevaZaTreniranje.append(img)
 
 inputs = fun_NM.prepare_for_ann(slikeBrojevaZaTreniranje)
-print(len(inputs))
 ann = fun_NM.create_ann()
 ann = fun_NM.train_ann(ann, inputs, ocekivaniIzlazi)
 
