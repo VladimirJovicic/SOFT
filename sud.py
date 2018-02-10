@@ -25,9 +25,9 @@ res = cv2.bitwise_and(closex,closey)
 centroids = fun_slike.dodajKoordinatePreseka(res,img)
 #slike_fun.prikaziSliku(img)
 
-bm,b = fun_slike.setuj_i_sortiraj(centroids)
+stekovani_r,stekovani = fun_slike.setuj_i_sortiraj(centroids)
 
-output,niz = fun_slike.kreirajMatricu(b,bm,res2)
+output,niz = fun_slike.kreirajMatricu(stekovani,stekovani_r,res2)
 fun_slike.prikaziSliku(output)
 
 ########################################################

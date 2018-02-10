@@ -124,33 +124,33 @@ def dodajKoordinatePreseka(res,img):
 
 def setuj_i_sortiraj(centroids):
     centroids = np.array(centroids, dtype=np.float32)
-    c = centroids.reshape((100, 2))
-    c2 = c[np.argsort(c[:, 1])]
+    centri = centroids.reshape((100, 2))
+    sortirani_centri = centri[np.argsort(centri[:, 1])]
 
-    b = np.vstack([c2[i * 10:(i + 1) * 10][np.argsort(c2[i * 10:(i + 1) * 10, 0])] for i in range(10)])
-    bm = b.reshape((10, 10, 2))
-    return bm,b
+    stekovani = np.vstack([sortirani_centri[i * 10:(i + 1) * 10][np.argsort(sortirani_centri[i * 10:(i + 1) * 10, 0])] for i in range(10)])
+    stekovani_r = stekovani.reshape((10, 10, 2))
+    return stekovani_r,stekovani
 
 def kreirajMatricu(b,bm,res2):
     niz = []
     output = np.zeros((450, 450, 3), np.uint8)
     for i, j in enumerate(b):
-       # print("j = ",j)
-        ri = i // 10
-        ci = i % 10
-        #print('int(ri) = ',int(ri))
-        #print(ci)
-        if ci != 9 and ri != 9:
-            src = bm[ri:ri + 2, ci:ci + 2].reshape((4, 2))
-            #print(i, '\n', src)
-            dst = np.array([[ci * 50, ri * 50], [(ci + 1) * 50 - 1, ri * 50], [ci * 50, (ri + 1) * 50 - 1],
-                            [(ci + 1) * 50 - 1, (ri + 1) * 50 - 1]], np.float32)
+       # pred_int("j = ",j)
+        red_i = i // 10
+        kolona_i = i % 10
+        #pred_int('int(red_i) = ',int(red_i))
+        #pred_int(kolona_i)
+        if kolona_i != 9 and red_i != 9:
+            src = bm[red_i:red_i + 2, kolona_i:kolona_i + 2].reshape((4, 2))
+            #pred_int(i, '\n', src)
+            dst = np.array([[kolona_i * 50, red_i * 50], [(kolona_i + 1) * 50 - 1, red_i * 50], [kolona_i * 50, (red_i + 1) * 50 - 1],
+                            [(kolona_i + 1) * 50 - 1, (red_i + 1) * 50 - 1]], np.float32)
             retval = cv2.getPerspectiveTransform(src, dst)
             warp = cv2.warpPerspective(res2, retval, (450, 450))
-            output[int(ri) * 50:(int(ri) + 1) * 50 - 1, int(ci) * 50:(int(ci) + 1) * 50 - 1] = warp[int(ri) * 50:(int(ri) + 1) * 50 - 1,
-                                                                           int(ci) * 50:(int(ci) + 1) * 50 - 1].copy()
-            niz.append(warp[int(ri) * 50:(int(ri) + 1) * 50 - 1,int(ci) * 50:(int(ci) + 1) * 50 - 1].copy())
-            #prikaziSliku(output)
+            output[int(red_i) * 50:(int(red_i) + 1) * 50 - 1, int(kolona_i) * 50:(int(kolona_i) + 1) * 50 - 1] = warp[int(red_i) * 50:(int(red_i) + 1) * 50 - 1,
+                                                                           int(kolona_i) * 50:(int(kolona_i) + 1) * 50 - 1].copy()
+            niz.append(warp[int(red_i) * 50:(int(red_i) + 1) * 50 - 1,int(kolona_i) * 50:(int(kolona_i) + 1) * 50 - 1].copy())
+            #pred_ikaziSliku(output)
     return output,niz
 
 

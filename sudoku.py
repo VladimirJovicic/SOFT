@@ -8,8 +8,8 @@ def print_sudoku(puzzle):
         print(red)
 
 def validno(i,j,val,puzzle):
-    #ako se broj moze staviti na dato polje funkcija vraca 1
-    #ako se ne moze staviti na dato polje, funkcija vraca -1
+    #ako se broj moze staviti na dato polje funkcija vraca True
+    #ako se ne moze staviti na dato polje, funkcija vraca False
 
     #proverava da li se broj nalazi u istom redu
     for k in range(0,8):
