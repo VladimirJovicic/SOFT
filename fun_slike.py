@@ -1,5 +1,9 @@
 import cv2
 import numpy as np
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+
 
 
 def prikaziSliku(img):
@@ -41,40 +45,6 @@ def izolujMatricu(res, mask,res2):
     cv2.drawContours(mask, [best_cnt], 0, 0, 0)
     res = cv2.bitwise_and(res, mask)
 
-    # ostatav ove funkcije se ne koristi
-    # mozda ce biti obrisan ali dobro detektuje sve coskove
-    # ako ne budemo koristili brisemo
-    '''
-    M = cv2.moments(biggest)
-    cx = int(M['m10'] / M['m00'])
-    cy = int(M['m01'] / M['m00'])
-
-    # trazi sva 4 coska
-    for a in range(0, 4):
-        # racuna razliku izmedju centra kvadrata i tacaka
-        dx = biggest[a][0][0] - cx
-        dy = biggest[a][0][1] - cy
-
-        if dx < 0 and dy < 0:
-            topleft = (biggest[a][0][0], biggest[a][0][1])
-        elif dx > 0 and dy < 0:
-            topright = (biggest[a][0][0], biggest[a][0][1])
-        elif dx > 0 and dy > 0:
-            botright = (biggest[a][0][0], biggest[a][0][1])
-        elif dx < 0 and dy > 0:
-            botleft = (biggest[a][0][0], biggest[a][0][1])
-
-    corners = []
-    corners.append(topleft)
-    corners.append(topright)
-    corners.append(botright)
-    corners.append(botleft)
- '''
-    # provera za isrctavanje coskova
-    #tmpRes = res
-    #for i in range(0,4):
-    #    cv2.circle(tmpRes, (corners[i][0],corners[i][1]), 25, (0, 255, 255), -1)
-    #    prikaziSliku(tmpRes)
     return  res
 
 
@@ -160,6 +130,23 @@ def kreirajMatricu(b,bm,res2):
             niz.append(warp[int(ri) * 50:(int(ri) + 1) * 50 - 1,int(ci) * 50:(int(ci) + 1) * 50 - 1].copy())
             #prikaziSliku(output)
     return output,niz
+
+def iscrtajBrojeveNaSliku(ulazna_matrica, resena_matrica, slika):
+    image = Image.fromarray(slika, 'RGB')
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype('arial.ttf', 40)
+    for i in range(0, 9):
+        for j in range(0, 9):
+            # draw.text((i*50 + 10, j*50), "1", (i*30, i*j, j*20),font = font)
+            if ulazna_matrica[j][i] == 0:
+                #print(ulazna_matrica[i][j])
+                draw.text((i * 50 + 10, j * 50), str(resena_matrica[j][i]), (0, 255, 0), font=font)
+
+    konacna_slika = np.array(image)
+    # kovertovanje RGB i BGR
+    konacna_slika = konacna_slika[:, :, ::-1].copy()
+    prikaziSliku(konacna_slika)
+
 
 
 def razbiSlikuNaKvadrate(img):
